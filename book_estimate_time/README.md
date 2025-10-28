@@ -19,6 +19,7 @@ Just make sure that all the input is positive.
 
 Authorship Note with signature
 
+![Uploading Screenshot 2025-10-28 at 1.06.42 PM.png…]()
 
 Khor Ken Joo 299843
 

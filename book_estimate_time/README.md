@@ -19,7 +19,7 @@ Just make sure that all the input is positive.
 
 Authorship Note with signature
 
-![Uploading Screenshot 2025-10-28 at 1.06.42 PM.png…]()
+<img width="357" height="155" alt="Screenshot 2025-10-28 at 1 10 36 PM" src="https://github.com/user-attachments/assets/85c52fad-dfad-4883-98fd-8c637b04a506" />
 
 Khor Ken Joo 299843
 

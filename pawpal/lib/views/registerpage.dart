@@ -178,7 +178,7 @@ class _RegisterPageState extends State<RegisterPage> {
   
   void registerUser(String email, String password, String name, String phone) {
     http.post(
-     Uri.parse('${MyConfig.baseUrl}/register_user.php'),
+     Uri.parse('${MyConfig.baseUrl}/pawpal/api/register_user.php'),
      body: {'email': email, 'name': name, 'phone': phone, 'password': password},
     ).then((response) {
       print('${response.body}');

@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
     } 
 
   http.post(
-    Uri.parse('${MyConfig.baseUrl}/login_user.php'),
+    Uri.parse('${MyConfig.baseUrl}/pawpal/api/login_user.php'),
     body: {'email' : email, 'password' : password},
     ).then((response) {
       print('${response.body}');

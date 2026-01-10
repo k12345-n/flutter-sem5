@@ -11,18 +11,21 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 $userid = $_POST['user_id'];
 $petname = addslashes($_POST['pet_name']);
 $petType = $_POST['pet_type'];
-$category = $_POST['category'];	
+
+$petAge = isset($_POST['pet_age']) ? (int)$_POST['pet_age'] : 0; 
+$gender = isset($_POST['gender']) ? $_POST['gender'] : "Unknown";
+$health = isset($_POST['health_status']) ? addslashes($_POST['health_status']) : "Healthy";
+
+$category = $_POST['category']; 
 $description = addslashes($_POST['description']);
 $lat = floatval($_POST['lat']);
 $lng = floatval($_POST['lng']);
 $imageCount = isset($_POST['image_count']) ? (int)$_POST['image_count'] : 1;
 
-// Split multiple images (separated by |||)
 $encodedImages = explode('|||', $_POST['image_paths']);
 
-// Insert pet without image_paths first
-$sqlinsertpet = "INSERT INTO `tbl_pets`(`user_id`, `pet_name`, `pet_type`, `category`, `description`, `lat`, `lng`) 
-VALUES ('$userid', '$petname', '$petType', '$category', '$description', '$lat', '$lng')";
+$sqlinsertpet = "INSERT INTO `tbl_pets`(`user_id`, `pet_name`, `pet_type`, `pet_age`, `gender`, `health_status`, `category`, `description`, `lat`, `lng`) 
+VALUES ('$userid', '$petname', '$petType', '$petAge', '$gender', '$health', '$category', '$description', '$lat', '$lng')";
 
 try{
     if ($conn->query($sqlinsertpet) === TRUE){
@@ -30,11 +33,9 @@ try{
         
         $filenames = array();
         
-        // Save each image
         for ($i = 0; $i < count($encodedImages) && $i < 3; $i++) {
             $encodedimage = base64_decode($encodedImages[$i]);
             
-            // Create filename: pet_15_1.png, pet_15_2.png, pet_15_3.png
             $filename = "pet_".$last_id."_".($i + 1).".png";
             $path = "../assets/pets/".$filename;
             
@@ -47,11 +48,9 @@ try{
                 error_log("Failed to save image $filename");
             }
         }
-        
-        // Join filenames with comma for database storage
+
         $imagePathsString = implode(',', $filenames);
         
-        // Update the record with the image filenames
         $sqlupdate = "UPDATE `tbl_pets` SET `image_paths` = '$imagePathsString' WHERE `pet_id` = $last_id";
         
         if ($conn->query($sqlupdate) === TRUE) {

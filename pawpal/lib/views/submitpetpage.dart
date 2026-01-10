@@ -36,7 +36,6 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
   bool isLoading = false;
   late double height, width;
   
-  // Changed to support multiple images (max 3)
   List<File> images = [];
   List<Uint8List> webImages = [];
 
@@ -66,7 +65,6 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Image selection area
                   Container(
                     width: width,
                     padding: EdgeInsets.all(8),
@@ -106,7 +104,6 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                           ],
                         ),
                         SizedBox(height: 12),
-                        // Display selected images
                         _getImageCount() > 0
                             ? GridView.builder(
                                 shrinkWrap: true,
@@ -134,7 +131,6 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
                                           ),
                                         ),
                                       ),
-                                      // Delete button
                                       Positioned(
                                         top: 4,
                                         right: 4,
@@ -506,7 +502,6 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
   }
 
   void submitPet() {
-    // Convert all images to base64 and join with commas
     List<String> base64Images = [];
     
     if (kIsWeb) {
@@ -519,7 +514,7 @@ class _SubmitPetScreenState extends State<SubmitPetScreen> {
       }
     }
     
-    String allImages = base64Images.join('|||'); // Use ||| as separator
+    String allImages = base64Images.join('|||');
     
     String petname = petNameController.text.trim();
     String desc = descController.text.trim();

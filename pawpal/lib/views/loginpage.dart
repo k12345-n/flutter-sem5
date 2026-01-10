@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pawpal/my_config.dart';
@@ -16,13 +15,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  // Controllers to capture user input from the text fields
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  
   late double height, width;
-  bool visible = true;
-  bool isChecked = false;
+  bool visible = true; 
+  bool isChecked = false; 
 
-  late User user;
+  late User user; 
 
   @override
   void initState() {
@@ -51,11 +52,13 @@ class _LoginPageState extends State<LoginPage> {
               width: width,
               child: Column(
                 children: [
+                  // App logo display
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Image.asset('assets/images/pawpal.png', scale: 1),
                   ),
                   SizedBox(height: 5),
+                  // Email input field
                   TextField(
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
@@ -65,6 +68,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(height: 5),
+                  // Password input field with a visibility toggle icon
                   TextField(
                     controller: passwordController,
                     obscureText: visible,
@@ -78,6 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 5),
 
+                  // "Remember me" section allowing users to save credentials locally
                   Padding(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     child: Row(
@@ -97,6 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
 
                   SizedBox(height: 20),
+                  // Main login button
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
@@ -107,6 +113,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   SizedBox(height: 10),
+                  // Navigation link to the Registration page
                   TextButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -124,9 +131,9 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
-    
   }
   
+  // Loads saved email/password if "Remember me" was previously checked
   void loadPreferences() {
     SharedPreferences.getInstance().then((prefs) {
       bool? rememberMe = prefs.getBool('rememberMe');
@@ -136,7 +143,7 @@ class _LoginPageState extends State<LoginPage> {
         emailController.text = email ?? '';
         passwordController.text = password ?? '';
         isChecked = true;
-        setState(() {});
+        setState(() {}); // Refresh UI to show the checkmark
       }
     });
   }
@@ -145,6 +152,7 @@ class _LoginPageState extends State<LoginPage> {
     String email = emailController.text.trim();
     String password = passwordController.text.trim();
 
+    // Check whether the fields are empty or not
     if (email.isEmpty || password.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -155,9 +163,9 @@ class _LoginPageState extends State<LoginPage> {
       return;
     } 
 
-  http.post(
-    Uri.parse('${MyConfig.baseUrl}/pawpal/api/login_user.php'),
-    body: {'email' : email, 'password' : password},
+    http.post(
+      Uri.parse('${MyConfig.baseUrl}/pawpal/api/login_user.php'),
+      body: {'email' : email, 'password' : password},
     ).then((response) {
       print('${response.body}');
       if (response.statusCode == 200) {
@@ -173,6 +181,7 @@ class _LoginPageState extends State<LoginPage> {
             )
           );
 
+          // Move to the Homepage and clear the navigation stack
           Navigator.pushReplacement(
             context, 
             MaterialPageRoute(
@@ -180,6 +189,7 @@ class _LoginPageState extends State<LoginPage> {
             )
           );
         } else {
+          // Show error message returned by the PHP script (e.g., Wrong credentials)
           if (!mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -200,10 +210,12 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
   
+  // Saves or removes credentials from SharedPreferences based on the checkbox status
   Future<void> updatepref(bool isChecked) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     
     if (isChecked){
+      // Save data if fields are not empty
       if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
         prefs.setString('email', emailController.text);
         prefs.setString('password', passwordController.text);
@@ -216,6 +228,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
         );
       } else {
+        // If fields are empty, prevent the user from checking the box
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Please fill in your email and password'),
@@ -227,6 +240,7 @@ class _LoginPageState extends State<LoginPage> {
         });
       }
     } else {
+      // If unchecked, remove all saved credential data
       prefs.remove('email');
       prefs.remove('password');
       prefs.remove('rememberMe');
